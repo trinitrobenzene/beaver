@@ -10,6 +10,6 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(port);
-  console.log(`App is running at http://127.0.0.1:${port}`);
+  console.log(`App is running at http://localhost:${port}`);
 }
 bootstrap();

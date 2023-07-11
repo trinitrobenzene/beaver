@@ -12,7 +12,9 @@ export class AppController {
   @Get()
   getHello(): string {
     console.log(
-      `App is running at http://localhost:${this.configService.get<string>('PORT')}/`,
+      `App is running at http://localhost:${this.configService.get<string>(
+        'PORT',
+      )}/`,
     );
     return this.appService.getHello();
   }

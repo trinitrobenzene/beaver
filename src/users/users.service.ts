@@ -26,16 +26,20 @@ export class UsersService {
     return newUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.userModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.userModel.findById({ _id: id });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(dto: UpdateUserDto) {
+    const result = await this.userModel.updateOne({ _id: dto.id }, { ...dto });
+    if (result) {
+      return 'Cập nhật thành công!';
+    }
+    return 'Thất bại';
   }
 
   remove(id: number) {

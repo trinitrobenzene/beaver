@@ -1,3 +1,4 @@
+import { log } from 'console';
 import FFT from 'fft.js';
 
 const RANGE = [40, 80, 120, 180, 300];
@@ -71,6 +72,39 @@ export function normalizeAudioData(audioData: Float32Array) {
   return audioData;
 }
 
+function findPeaks(spectrum: number[], range: [number, number]): string[] {
+  const peaks: string[] = [];
+  const [startFreq, endFreq] = range;
+
+  for (let i = startFreq; i <= endFreq; i++) {
+    if (spectrum[i] > spectrum[i - 1] && spectrum[i] > spectrum[i + 1]) {
+      peaks.push(i.toString());
+    }
+  }
+
+  return peaks;
+}
+
+function foo(spectrum: number[]): number[] {
+  const lowRange = [30, 40]; // Khoảng tần số thấp
+  const midRange = [120, 180]; // Khoảng tần số trung
+  const highRange = [180, 300]; // Khoảng tần số cao
+
+  const fingerprint: number[] = [];
+
+  // Tạo fingerprint từ các khoảng tần số quan trọng
+  const lowRangePeaks = findPeaksInRange(spectrum, lowRange);
+  const midRangePeaks = findPeaksInRange(spectrum, midRange);
+  const highRangePeaks = findPeaksInRange(spectrum, highRange);
+
+  // Gộp các cực đại vào fingerprint
+  fingerprint.push(...lowRangePeaks);
+  fingerprint.push(...midRangePeaks);
+  fingerprint.push(...highRangePeaks);
+
+  return fingerprint;
+}
+
 /**
  * Chuyển đổi âm thanh thành vân tay âm thanh (audio fingerprint).
  * @param audioData Dữ liệu âm thanh đầu vào.
@@ -82,7 +116,7 @@ export function generateAudioFingerprint(audioData: Float32Array): string {
   const freqBinCount = 256;
 
   for (let t = 0; t < audioData.length / freqBinCount; t++) {
-    const frequencies: number[] = [];
+    // const frequencies: number[] = [];
 
     for (let freq = 40; freq < 300; freq++) {
       // Tính toán magnitude
@@ -92,24 +126,19 @@ export function generateAudioFingerprint(audioData: Float32Array): string {
       const index = getIndex(freq);
 
       // Lưu giá trị magnitude cao nhất và tần số tương ứng
-      if (!highscores[t]) {
+      /* if (!highscores[t]) {
         highscores[t] = new Array(RANGE.length).fill(0);
+      } */
+      if (mag > highscores[t][index]) {
+        points[t][index] = freq;
       }
-      if (!frequencies[index] || mag > highscores[t][index]) {
-        highscores[t][index] = mag;
-        frequencies[index] = freq;
-      }
+
+      console.log(points[t][index]);
     }
 
     // Tạo mã hash từ các tần số
-    const h = hash(
-      frequencies[0],
-      frequencies[1],
-      frequencies[2],
-      frequencies[3],
-    );
-
-    points[t] = frequencies;
+    const h = hash(points[t][0], points[t][1], points[t][2], points[t][3]);
+    console.log(h);
   }
 
   // Tạo vân tay âm thanh từ mã hash

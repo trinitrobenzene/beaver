@@ -42,6 +42,8 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return { message: 'User not found!' };
+    return this.usersService.remove(id);
   }
 }

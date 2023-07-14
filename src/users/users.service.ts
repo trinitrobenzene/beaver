@@ -42,7 +42,10 @@ export class UsersService {
     return 'Thất bại';
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const result = await this.userModel.deleteOne({ _id: id });
+    if (result.deletedCount) return 'Xóa thành công!';
+    console.log(result);
+    return Error('Xóa thất bại');
   }
 }

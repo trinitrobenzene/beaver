@@ -72,38 +72,38 @@ export function normalizeAudioData(audioData: Float32Array) {
   return audioData;
 }
 
-function findPeaks(spectrum: number[], range: [number, number]): string[] {
-  const peaks: string[] = [];
+function findPeaksInRange(spectrum: number[], range: [number, number]): number[] {
+  const peaks: number[] = [];
   const [startFreq, endFreq] = range;
 
   for (let i = startFreq; i <= endFreq; i++) {
     if (spectrum[i] > spectrum[i - 1] && spectrum[i] > spectrum[i + 1]) {
-      peaks.push(i.toString());
+      peaks.push(i);
     }
   }
 
   return peaks;
 }
 
-function foo(spectrum: number[]): number[] {
-  const lowRange = [30, 40]; // Khoảng tần số thấp
-  const midRange = [120, 180]; // Khoảng tần số trung
-  const highRange = [180, 300]; // Khoảng tần số cao
+// function foo(spectrum: number[]): number[] {
+//   const lowRange = [30, 40]; // Khoảng tần số thấp
+//   const midRange = [120, 180]; // Khoảng tần số trung
+//   const highRange = [180, 300]; // Khoảng tần số cao
 
-  const fingerprint: number[] = [];
+//   const fingerprint: number[] = [];
 
-  // Tạo fingerprint từ các khoảng tần số quan trọng
-  const lowRangePeaks = findPeaksInRange(spectrum, lowRange);
-  const midRangePeaks = findPeaksInRange(spectrum, midRange);
-  const highRangePeaks = findPeaksInRange(spectrum, highRange);
+//   // Tạo fingerprint từ các khoảng tần số quan trọng
+//   const lowRangePeaks = findPeaksInRange(spectrum, lowRange);
+//   const midRangePeaks = findPeaksInRange(spectrum, midRange);
+//   const highRangePeaks = findPeaksInRange(spectrum, highRange);
 
-  // Gộp các cực đại vào fingerprint
-  fingerprint.push(...lowRangePeaks);
-  fingerprint.push(...midRangePeaks);
-  fingerprint.push(...highRangePeaks);
+//   // Gộp các cực đại vào fingerprint
+//   fingerprint.push(...lowRangePeaks);
+//   fingerprint.push(...midRangePeaks);
+//   fingerprint.push(...highRangePeaks);
 
-  return fingerprint;
-}
+//   return fingerprint;
+// }
 
 /**
  * Chuyển đổi âm thanh thành vân tay âm thanh (audio fingerprint).
